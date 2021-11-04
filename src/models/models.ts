@@ -1,0 +1,5 @@
+export const PATCHPANEL = 'Patchpanel'
+export const INTERFACE = 'Interface'
+export const ROOM = 'Room'
+export const RACK = 'Rack'
+export const DEVICE = 'Device'
