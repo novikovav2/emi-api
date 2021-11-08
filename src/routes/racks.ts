@@ -1,15 +1,16 @@
 import express from "express";
 import racksController from '../controllers/racks'
+import {auth} from "../controllers/middleware";
 
 const racksRouter = express.Router()
 
-racksRouter.get('/', racksController.getAll)
-racksRouter.get('/:id', racksController.getOne)
-racksRouter.post('/', racksController.add)
-racksRouter.post('/:id', racksController.update)
-racksRouter.delete('/:id', racksController.remove)
+racksRouter.get('/', auth, racksController.getAll)
+racksRouter.get('/:id', auth, racksController.getOne)
+racksRouter.post('/', auth, racksController.add)
+racksRouter.post('/:id', auth, racksController.update)
+racksRouter.delete('/:id', auth, racksController.remove)
 
-racksRouter.get('/:id/devices', racksController.getDevices)
-racksRouter.get('/:id/patchpanels', racksController.getPatchpanels)
+racksRouter.get('/:id/devices', auth, racksController.getDevices)
+racksRouter.get('/:id/patchpanels', auth, racksController.getPatchpanels)
 
 export = racksRouter

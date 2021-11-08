@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {DEVICE, INTERFACE, PATCHPANEL} from "../models/models";
 import {PATCHCORDS} from "../models/relations";
-import {query} from "./helpers";
+import {query} from "./helpers/neo4j";
 
 
 // GET /patchcords

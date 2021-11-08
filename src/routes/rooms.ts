@@ -1,13 +1,14 @@
 import express from "express";
 import roomsController from '../controllers/rooms'
+import {auth} from "../controllers/middleware";
 const roomsRouter = express.Router()
 
-roomsRouter.get('/', roomsController.getAll)
-roomsRouter.get('/:id', roomsController.getOne)
-roomsRouter.post('/', roomsController.add)
-roomsRouter.post('/:id', roomsController.update)
-roomsRouter.delete('/:id', roomsController.remove)
+roomsRouter.get('/', auth, roomsController.getAll)
+roomsRouter.get('/:id', auth, roomsController.getOne)
+roomsRouter.post('/', auth, roomsController.add)
+roomsRouter.post('/:id', auth, roomsController.update)
+roomsRouter.delete('/:id', auth, roomsController.remove)
 
-roomsRouter.get('/:id/racks', roomsController.getRacks)
+roomsRouter.get('/:id/racks', auth, roomsController.getRacks)
 
 export = roomsRouter

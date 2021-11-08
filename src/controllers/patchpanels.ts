@@ -5,7 +5,7 @@ import {
 } from "../models/relations";
 import {material} from "../models/material";
 import {INTERFACE, PATCHPANEL, RACK} from "../models/models";
-import {query} from "./helpers";
+import {query} from "./helpers/neo4j";
 
 // GET /patchpanels
 const getAll = async (request: Request, response: Response) => {

@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {DEVICES_IN_RACK, INTERFACES_IN_DEVICE} from "../models/relations";
 import {DEVICE, INTERFACE, RACK} from "../models/models";
-import {query} from "./helpers";
+import {query} from "./helpers/neo4j";
 
 // GET /devices
 const getAll = async (request: Request, response: Response) => {

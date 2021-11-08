@@ -1,12 +1,12 @@
-import driver from "../db/neo4j";
-import {Device} from "../models/device";
-import {Interface} from "../models/interface";
-import {Room} from "../models/room";
-import {Rack} from "../models/rack";
-import {Patchpanel} from "../models/patchpanel";
-import {Patchcord} from "../models/patchcord";
-import {LogicalLink} from "../models/logical-link";
-import {Cable} from "../models/cable";
+import driver from "../../db/neo4j";
+import {Device} from "../../models/device";
+import {Interface} from "../../models/interface";
+import {Room} from "../../models/room";
+import {Rack} from "../../models/rack";
+import {Patchpanel} from "../../models/patchpanel";
+import {Patchcord} from "../../models/patchcord";
+import {LogicalLink} from "../../models/logical-link";
+import {Cable} from "../../models/cable";
 
 export type resultFormat = 'room' | 'rack' | 'device' | 'patchpanel' | 'interface' |
                             'patchcord' | 'logicalLink' | 'cables'

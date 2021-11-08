@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {DEVICE, INTERFACE} from "../models/models";
 import {LOGICAL_LINK} from "../models/relations";
-import {query} from "./helpers";
+import {query} from "./helpers/neo4j";
 
 
 // GET /logicalLinks

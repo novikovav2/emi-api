@@ -1,16 +1,17 @@
 import express from "express";
 import patchpanelsController from '../controllers/patchpanels'
+import {auth} from "../controllers/middleware";
 
 const patchpanelsRouter = express.Router()
 
-patchpanelsRouter.get('/', patchpanelsController.getAll)
-patchpanelsRouter.get('/:id', patchpanelsController.getOne)
-patchpanelsRouter.post('/', patchpanelsController.add)
-patchpanelsRouter.post('/:id', patchpanelsController.update)
-patchpanelsRouter.delete('/:id', patchpanelsController.remove)
+patchpanelsRouter.get('/', auth, patchpanelsController.getAll)
+patchpanelsRouter.get('/:id', auth, patchpanelsController.getOne)
+patchpanelsRouter.post('/', auth, patchpanelsController.add)
+patchpanelsRouter.post('/:id', auth, patchpanelsController.update)
+patchpanelsRouter.delete('/:id', auth, patchpanelsController.remove)
 
-patchpanelsRouter.get('/:id/interfaces', patchpanelsController.getInterfaces)
-patchpanelsRouter.post('/:id/interfaces', patchpanelsController.createInterface)
-patchpanelsRouter.delete('/:id/interfaces/:intId', patchpanelsController.removeInterface)
+patchpanelsRouter.get('/:id/interfaces', auth, patchpanelsController.getInterfaces)
+patchpanelsRouter.post('/:id/interfaces', auth, patchpanelsController.createInterface)
+patchpanelsRouter.delete('/:id/interfaces/:intId', auth, patchpanelsController.removeInterface)
 
 export = patchpanelsRouter

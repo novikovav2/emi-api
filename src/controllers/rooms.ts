@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import {RACKS_IN_ROOM} from "../models/relations";
 import {RACK, ROOM} from "../models/models";
-import {query} from "./helpers";
+import {query} from "./helpers/neo4j";
 
 // GET /rooms
 const getAll = async (request: Request, response: Response) => {

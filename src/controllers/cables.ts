@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {INTERFACE, PATCHPANEL} from "../models/models";
 import {CABLES} from "../models/relations";
-import {query} from "./helpers";
+import {query} from "./helpers/neo4j";
 
 
 // GET /cables

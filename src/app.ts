@@ -8,7 +8,10 @@ import patchpanelsRouter from "./routes/patchpanels";
 import logicalLinksRouter from "./routes/logical-links";
 import cablesRouter from "./routes/cables";
 import patchcordsRouter from "./routes/patchcords";
+import {authRouter} from "./routes/auth";
+import {initDB} from "./db/mysql-init";
 
+initDB()
 
 const router: Express = express()
 
@@ -37,6 +40,7 @@ router.use('/patchpanels', patchpanelsRouter)
 router.use('/logicalLinks', logicalLinksRouter)
 router.use('/cables', cablesRouter)
 router.use('/patchcords', patchcordsRouter)
+router.use('/auth', authRouter)
 
 
 
