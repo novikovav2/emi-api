@@ -15,7 +15,7 @@ const formatRoom = (record: any): Room => {
     const room =  record.get('n')
     return {
         id: room.identity.low,
-        name: room.properties.name
+        title: room.properties.title
     }
 }
 
@@ -27,7 +27,7 @@ const formatRack = (record: any): Rack => {
         name: rack.properties.name,
         room: {
             id: room.identity.low,
-            name: room.properties.name
+            title: room.properties.name
         }
     }
 }

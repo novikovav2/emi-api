@@ -31,6 +31,19 @@ export const renewJWT = async (userToken: string) => {
         await tokenDB.destroy()
         return token
     } catch (e) {
-        console.log('Error occurred while reneJWT: ', e)
+        console.log('Error occurred while renewJWT: ', e)
+    }
+}
+
+export const deleteJWT = async (token: string) => {
+    try {
+        const tokenDB = await Token.findOne({ where: {jwt: token}})
+        if (!tokenDB) {
+            return
+        }
+        await tokenDB.destroy()
+        return { status: 'ok' }
+    } catch (e) {
+        console.log('Error occurred while deleteJWT: ', e)
     }
 }

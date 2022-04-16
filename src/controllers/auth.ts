@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {User} from "../models/user";
-import {emailValidator, generateJWT, passwordCheck} from "./helpers/auth";
+import {deleteJWT, emailValidator, generateJWT, passwordCheck} from "./helpers/auth";
 
 const signUp = async (request: Request, response: Response) => {
     const email: string = request.body.email
@@ -52,7 +52,7 @@ const signIn = async (request: Request, response: Response) => {
                 }
             }
         } else {
-            status = 404
+            status = 422
             result = {error: 'User with this params not found'}
         }
 
@@ -68,4 +68,26 @@ const verify = async (request: Request, response: Response) => {
     response.status(200).json({status: 'ok'})
 }
 
-export default {signUp, signIn, verify}
+const signOut = async (request: Request, response: Response) => {
+    let result: any
+    let status: any
+
+    try {
+        const authHeader = request.headers['authorization']
+        if (authHeader) {
+            const userToken = authHeader.split(' ')[1]
+            const result = await deleteJWT(userToken)
+            status = result ? 200 : 422
+        } else {
+            status = 401
+            result = {error: 'No access'}
+        }
+    } catch (error) {
+        console.log(error)
+        status = 500
+        result = {error: error}
+    }
+    response.status(status).json(result)
+}
+
+export default {signUp, signIn, verify, signOut}

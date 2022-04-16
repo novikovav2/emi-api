@@ -23,10 +23,11 @@ router.use(express.urlencoded({ extended: false }))
 router.use(express.json())
 
 router.use((request, response, next) => {
+    response.header('Access-Control-Expose-Headers', 'X-New-Token')
     response.header('Access-Control-Allow-Origin', '*')
     response.header('Access-Control-Allow-Headers', 'origin, X-Requested-With, Content-Type, Accept, Authorization')
     if (request.method === 'OPTIONS') {
-        response.header('Access-Control-Allow-Methods', 'GET DELETE POST')
+        response.header('Access-Control-Allow-Methods', 'GET, DELETE, POST')
         return response.status(200).json({})
     }
     next()
