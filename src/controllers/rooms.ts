@@ -16,12 +16,6 @@ const getOne = async (request: Request, response: Response) => {
     const id:number = +request.params.id
     const cypher = `MATCH (n:${ROOM}) where ID(n) = $id RETURN n`
 
-    if (!id) {
-        response.status(400).json({
-            error: 'ID must be number'
-        })
-    }
-
     const {status, result} = await query(cypher, {id: id}, 'room', false)
     return response.status(status).json(result)
 
