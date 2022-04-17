@@ -45,8 +45,8 @@ const add = async (request: Request, response: Response) => {
 // POST /rooms/:id
 const update = async (request: Request, response: Response) => {
     const id:number = +request.params.id
-    const name: string = request.body.name
-    const cypher = `MATCH (n:${ROOM}) where ID (n)=$id SET n.name=$name RETURN n`
+    const title: string = request.body.title
+    const cypher = `MATCH (n:${ROOM}) where ID (n)=$id SET n.title=$title RETURN n`
 
     if (!id) {
         response.status(400).json({
@@ -54,13 +54,13 @@ const update = async (request: Request, response: Response) => {
         })
     }
 
-    if (!name) {
+    if (!title) {
         response.status(400).json({
-            error: 'Name param is required'
+            error: 'Title param is required'
         })
     }
 
-    const {status, result} = await query(cypher, {id: id, name: name}, 'room', false)
+    const {status, result} = await query(cypher, {id: id, title: title}, 'room', false)
     return response.status(status).json(result)
 }
 
