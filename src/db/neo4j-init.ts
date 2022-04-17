@@ -3,7 +3,7 @@ import driver from './neo4j'
 
 
 const constraints = [
-    'CREATE CONSTRAINT IF NOT EXISTS ROOM_UNIQUE_NAME ON (room:Room) ASSERT room.name IS UNIQUE'
+    'CREATE CONSTRAINT IF NOT EXISTS ROOM_UNIQUE_NAME ON (room:Room) ASSERT room.title IS UNIQUE'
 ]
 
 const run = async () => {

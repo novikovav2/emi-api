@@ -29,16 +29,16 @@ const getOne = async (request: Request, response: Response) => {
 
 // POST /rooms
 const add = async (request: Request, response: Response) => {
-    const name: string = request.body.name
-    const cypher = `CREATE (n:${ROOM} {name: $name}) RETURN n`
+    const title: string = request.body.title
+    const cypher = `CREATE (n:${ROOM} {title: $title}) RETURN n`
 
-    if (!name) {
+    if (!title) {
         response.status(400).json({
-            error: 'Name param is required'
+            error: 'Title param is required'
         })
     }
 
-    const {status, result} = await query(cypher, {name: name}, 'room', false)
+    const {status, result} = await query(cypher, {title: title}, 'room', false)
     return response.status(status).json(result)
 }
 
