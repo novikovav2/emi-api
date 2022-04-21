@@ -27,7 +27,7 @@ const formatRack = (record: any): Rack => {
         name: rack.properties.name,
         room: {
             id: room.identity.low,
-            title: room.properties.name
+            title: room.properties.title
         }
     }
 }
