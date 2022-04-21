@@ -42,12 +42,6 @@ const update = async (request: Request, response: Response) => {
     const title: string = request.body.title
     const cypher = `MATCH (n:${ROOM}) where ID (n)=$id SET n.title=$title RETURN n`
 
-    if (!id) {
-        response.status(400).json({
-            error: 'ID must be number'
-        })
-    }
-
     if (!title) {
         response.status(400).json({
             error: 'Title param is required'
