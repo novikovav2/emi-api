@@ -32,25 +32,25 @@ const getOne = async (request: Request, response: Response) => {
 //  roomId - ID of room
 const add = async (request: Request, response: Response) => {
     const name: string = request.body.name
-    const roomId: number = +request.body.roomId
+    const roomId: string = request.body.roomId
     const cypher = `MATCH (n:${ROOM}) where ID(n)=$roomId
                     CREATE (m:${RACK} {name: $name})-[${RACKS_IN_ROOM}]->(n)
                     RETURN n,m`
-
+    console.log(typeof roomId)
     if (!roomId) {
         response.status(400).json({
-            error: 'roomId must be number'
+            error: 'roomId param is required'
         })
-    }
-
-    if (!name) {
+    } else if  (!name) {
         response.status(400).json({
             error: 'Name param is required'
         })
+    } else {
+        const {status, result} = await query(cypher, {name: name, roomId: roomId}, 'rack', false)
+        return response.status(status).json(result)
     }
 
-    const {status, result} = await query(cypher, {name: name, roomId: roomId}, 'rack', false)
-    return response.status(status).json(result)
+
 }
 
 // POST /racks/:id

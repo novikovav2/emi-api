@@ -74,12 +74,6 @@ const getRacks = async (request: Request, response: Response) => {
                     WHERE ID(n)=$id 
                     RETURN m, n`
 
-    if (!id) {
-        response.status(400).json({
-            error: 'ID must be a number'
-        })
-    }
-
     const {status, result} = await query(cypher, {id: id}, 'rack')
     return response.status(status).json(result)
 }
