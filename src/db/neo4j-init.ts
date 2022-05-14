@@ -32,3 +32,13 @@ const run = async () => {
 run()
 
 // npx ts-node src/db/neo4j-init.ts
+
+// Автоматическая генерация uuid:
+// ПОдробности тут: https://neo4j.com/labs/apoc/4.4/graph-updates/uuid/#automatic-uuids
+// CREATE CONSTRAINT ON (person:Person)
+// ASSERT person.uuid IS UNIQUE
+
+// CALL apoc.uuid.install('Room')
+// YIELD label, installed, properties
+// RETURN label, installed, properties
+

@@ -14,7 +14,8 @@ export type resultFormat = 'room' | 'rack' | 'device' | 'patchpanel' | 'interfac
 const formatRoom = (record: any): Room => {
     const room =  record.get('n')
     return {
-        id: room.identity.low,
+        // id: room.identity.low,
+        id: room.properties.uuid,
         title: room.properties.title
     }
 }
@@ -23,10 +24,10 @@ const formatRack = (record: any): Rack => {
     const room =  record.get('n')
     const rack =  record.get('m')
     return {
-        id: rack.identity.low,
+        id: rack.properties.uuid,
         name: rack.properties.name,
         room: {
-            id: room.identity.low,
+            id: room.properties.uuid,
             title: room.properties.title
         }
     }

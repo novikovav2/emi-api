@@ -1,7 +1,7 @@
 import {Room} from "./room";
 
 export interface Rack {
-    id: number,
+    id: string,
     name: string,
     room: Room
 }

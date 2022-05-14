@@ -13,8 +13,8 @@ const getAll = async (request: Request, response: Response) => {
 
 // GET /rooms/:id
 const getOne = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (n:${ROOM}) where ID(n) = $id RETURN n`
+    const id:string = request.params.id
+    const cypher = `MATCH (n:${ROOM}) where n.uuid = $id RETURN n`
 
     const {status, result} = await query(cypher, {id: id}, 'room', false)
     return response.status(status).json(result)
@@ -38,9 +38,9 @@ const add = async (request: Request, response: Response) => {
 
 // POST /rooms/:id
 const update = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
+    const id:string = request.params.id
     const title: string = request.body.title
-    const cypher = `MATCH (n:${ROOM}) where ID (n)=$id SET n.title=$title RETURN n`
+    const cypher = `MATCH (n:${ROOM}) where n.uuid=$id SET n.title=$title RETURN n`
 
     if (!title) {
         response.status(400).json({
@@ -54,8 +54,8 @@ const update = async (request: Request, response: Response) => {
 
 // DELETE /rooms/:id
 const remove = async (request: Request, response: Response) => {
-    const id: number = +request.params.id
-    const cypher = `MATCH (n:${ROOM}) WHERE ID(n)=$id DELETE n`
+    const id: string = request.params.id
+    const cypher = `MATCH (n:${ROOM}) WHERE n.uuid=$id DELETE n`
 
     if (!id) {
         response.status(400).json({
@@ -69,9 +69,9 @@ const remove = async (request: Request, response: Response) => {
 
 //GET /rooms/:id/racks
 const getRacks = async (request: Request, response: Response) => {
-    const id: number = +request.params.id
+    const id: string = request.params.id
     const cypher = `MATCH (n:${ROOM})<-[${RACKS_IN_ROOM}]-(m:${RACK}) 
-                    WHERE ID(n)=$id 
+                    WHERE n.uuid = $id 
                     RETURN m, n`
 
     const {status, result} = await query(cypher, {id: id}, 'rack')

@@ -13,12 +13,12 @@ const getAll = async (request: Request, response: Response) => {
 
 // GET /racks/:id
 const getOne = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (m:${RACK})-[${RACKS_IN_ROOM}]->(n:${ROOM}) where ID(m) = $id RETURN n,m`
+    const id:string = request.params.id
+    const cypher = `MATCH (m:${RACK})-[${RACKS_IN_ROOM}]->(n:${ROOM}) where m.uuid = $id RETURN n,m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID is required'
         })
     }
 
@@ -33,7 +33,7 @@ const getOne = async (request: Request, response: Response) => {
 const add = async (request: Request, response: Response) => {
     const name: string = request.body.name
     const roomId: string = request.body.roomId
-    const cypher = `MATCH (n:${ROOM}) where ID(n)=$roomId
+    const cypher = `MATCH (n:${ROOM}) where n.uuid=$roomId
                     CREATE (m:${RACK} {name: $name})-[${RACKS_IN_ROOM}]->(n)
                     RETURN n,m`
     console.log(typeof roomId)
@@ -55,15 +55,15 @@ const add = async (request: Request, response: Response) => {
 
 // POST /racks/:id
 const update = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
+    const id:string = request.params.id
     const name: string = request.body.name
-    const cypher = `MATCH (m:${RACK})-[${RACKS_IN_ROOM}]->(n:${ROOM}) where ID (m)=$id 
+    const cypher = `MATCH (m:${RACK})-[${RACKS_IN_ROOM}]->(n:${ROOM}) where ID m.uuid=$id 
                     SET m.name=$name 
                     RETURN n, m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID is required'
         })
     }
 
@@ -79,12 +79,12 @@ const update = async (request: Request, response: Response) => {
 
 // DELETE /racks/:id
 const remove = async (request: Request, response: Response) => {
-    const id: number = +request.params.id
-    const cypher = `MATCH (m:${RACK})-[r]-() WHERE ID(m)=$id DELETE r,m`
+    const id: string = request.params.id
+    const cypher = `MATCH (m:${RACK})-[r]-() WHERE m.uuid = $id DELETE r,m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be a number'
+            error: 'ID is required'
         })
     }
 
@@ -94,12 +94,12 @@ const remove = async (request: Request, response: Response) => {
 
 // GET /racks/:id/devices
 const getDevices = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (m:${RACK})<-[${DEVICES_IN_RACK}]-(n:${DEVICE}) where ID(m) = $id RETURN n,m`
+    const id:string = request.params.id
+    const cypher = `MATCH (m:${RACK})<-[${DEVICES_IN_RACK}]-(n:${DEVICE}) where m.uuid = $id RETURN n,m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID is required'
         })
     }
 
@@ -109,12 +109,13 @@ const getDevices = async (request: Request, response: Response) => {
 
 // GET /racks/:id/patchpanels
 const getPatchpanels = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (m:${RACK})<-[${PATCHPANELS_IN_RACK}]-(n:${PATCHPANEL}) where ID(m) = $id RETURN n,m`
+    const id:string = request.params.id
+    const cypher = `MATCH (m:${RACK})<-[${PATCHPANELS_IN_RACK}]-(n:${PATCHPANEL}) 
+                        where m.uuid = $id RETURN n,m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID is required'
         })
     }
 
