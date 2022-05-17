@@ -34,12 +34,12 @@ const getOne = async (request: Request, response: Response) => {
 // Params:
 //  name - name of device
 //  rackId - ID of rack
-//  type - 'cooper' or 'optic'
+//  type - 'COOPER' or 'OPTIC'
 const add = async (request: Request, response: Response) => {
     const name: string = request.body.name
-    const rackId: number = +request.body.rackId
+    const rackId: string = request.body.rackId
     const type: material = request.body.type
-    const cypher = `MATCH (m:${RACK}) where ID(m)=$rackId
+    const cypher = `MATCH (m:${RACK}) where m.uuid = $rackId
                     CREATE (n:${PATCHPANEL} {name: $name, type: $type})-[${PATCHPANELS_IN_RACK}]->(m)
                     RETURN n,m`
 
@@ -51,7 +51,7 @@ const add = async (request: Request, response: Response) => {
 
     if (!rackId) {
         response.status(400).json({
-            error: 'rackId must be number'
+            error: 'rackId param is required'
         })
     }
 
