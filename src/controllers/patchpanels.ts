@@ -17,12 +17,12 @@ const getAll = async (request: Request, response: Response) => {
 
 // GET /patchpanels/:id
 const getOne = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (n:${PATCHPANEL})-[${PATCHPANELS_IN_RACK}]->(m:${RACK}) where ID(n) = $id RETURN n,m`
+    const id:string = request.params.id
+    const cypher = `MATCH (n:${PATCHPANEL})-[${PATCHPANELS_IN_RACK}]->(m:${RACK}) where n.uuid = $id RETURN n,m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param required'
         })
     }
 
@@ -67,15 +67,15 @@ const add = async (request: Request, response: Response) => {
 
 // POST /patchpanels/:id
 const update = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
+    const id:string = request.params.id
     const name: string = request.body.name
-    const cypher = `MATCH (n:${PATCHPANEL})-[${PATCHPANELS_IN_RACK}]->(m:${RACK}) where ID (n)=$id 
+    const cypher = `MATCH (n:${PATCHPANEL})-[${PATCHPANELS_IN_RACK}]->(m:${RACK}) where n.uuid = $id 
                     SET n.name=$name 
                     RETURN n, m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param is required'
         })
     }
 
@@ -91,12 +91,12 @@ const update = async (request: Request, response: Response) => {
 
 // DELETE /patchpanels/:id
 const remove = async (request: Request, response: Response) => {
-    const id: number = +request.params.id
-    const cypher = `MATCH (n:${PATCHPANEL})-[r]-() WHERE ID(n)=$id DELETE r,n`
+    const id: string = request.params.id
+    const cypher = `MATCH (n:${PATCHPANEL})-[r]-() WHERE n.uuid = $id DELETE r,n`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be a number'
+            error: 'ID param is required'
         })
     }
 
@@ -106,14 +106,14 @@ const remove = async (request: Request, response: Response) => {
 
 //GET /patchpanels/:id/interfaces
 const getInterfaces = async (request: Request, response: Response) => {
-    const id: number = +request.params.id
+    const id: string = request.params.id
     const cypher = `MATCH (m:${PATCHPANEL})<-[${INTERFACES_IN_PATCHPANEL}]-(n:${INTERFACE}) 
-                    WHERE ID(m)=$id 
+                    WHERE m.uuid = $id 
                     RETURN m, n`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be a number'
+            error: 'ID param is required'
         })
     }
 
@@ -123,15 +123,15 @@ const getInterfaces = async (request: Request, response: Response) => {
 
 // POST /patchpanels/:id/interfaces
 const createInterface = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
+    const id:string = request.params.id
     const name: string = request.body.name
-    const cypher = `MATCH (m:${PATCHPANEL}) where ID(m)=$id
+    const cypher = `MATCH (m:${PATCHPANEL}) where m.uuid = $id
                     CREATE (n:${INTERFACE} {name: $name, type: m.type})-[${INTERFACES_IN_PATCHPANEL}]->(m)
                     RETURN n,m`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param is required'
         })
     }
 
@@ -147,15 +147,15 @@ const createInterface = async (request: Request, response: Response) => {
 
 // DELETE /patchpanels/:id/interfaces/:intId
 const removeInterface = async (request: Request, response: Response) => {
-    const patchpanelId: number = +request.params.id
-    const intId: number = +request.params.intId
+    const patchpanelId: string = request.params.id
+    const intId: string = request.params.intId
     const cypher = `MATCH (n:${INTERFACE})-[r${INTERFACES_IN_PATCHPANEL}]-(m:${PATCHPANEL}) 
-                    WHERE ID(n)=$intId AND ID(m)=$patchpanelId
+                    WHERE n.uuid = $intId AND m.uuid = $patchpanelId
                     DELETE r,n`
 
     if (!patchpanelId || !intId) {
         response.status(400).json({
-            error: 'ID must be a number'
+            error: 'ID param is required'
         })
     }
 
