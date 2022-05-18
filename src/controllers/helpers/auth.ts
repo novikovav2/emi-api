@@ -13,7 +13,7 @@ export const passwordCheck = (password:string, hash: string) => {
 }
 
 export const generateJWT = async (email: string) => {
-    const token: string =  await jwt.sign({user: email}, process.env.SECRET_KEY, { expiresIn: '1d' })
+    const token: string =  await jwt.sign({user: email}, process.env.SECRET_KEY, { expiresIn: '1w' })
     const expAt = new Date(jwt.verify(token, process.env.SECRET_KEY).exp * 1000)
 
     return { token, expAt }

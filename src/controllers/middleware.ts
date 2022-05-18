@@ -13,13 +13,13 @@ export const auth = async (request: Request, response: Response, next: NextFunct
 
     try {
         await jwt.verify(userToken, process.env.SECRET_KEY)
-        const newToken = await renewJWT(userToken)
-
-        if (newToken) {
-            response.setHeader('x-new-token', newToken)
-        } else {
-            return response.status(401).json({ error: "Token not found"})
-        }
+        // const newToken = await renewJWT(userToken)
+        //
+        // if (newToken) {
+        //     response.setHeader('x-new-token', newToken)
+        // } else {
+        //     return response.status(401).json({ error: "Token not found"})
+        // }
     } catch (error) {
         return response.status(401).json({ error: "Token invalid"})
     }
