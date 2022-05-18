@@ -50,11 +50,11 @@ const formatPatchpanel = (record: any): Patchpanel => {
     const patchpanel =  record.get('n')
     const rack =  record.get('m')
     return {
-        id: patchpanel.identity.low,
+        id: patchpanel.properties.uuid,
         name: patchpanel.properties.name,
         type: patchpanel.properties.type,
         rack: {
-            id: rack.identity.low,
+            id: rack.properties.uuid,
             name: rack.properties.name,
         }
     }
