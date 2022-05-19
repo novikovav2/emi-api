@@ -1,12 +1,12 @@
 import {material} from "./material";
 
 export interface Interface {
-    id: number,
+    id: string,
     name: string,
     type: material,
     connected: boolean
     owner: {
-        id: number,
+        id: string,
         name: string
     }
 }

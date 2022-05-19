@@ -64,12 +64,12 @@ const formatInterface = (record: any): Interface => {
     const int =  record.get('n')
     const owner =  record.get('m')
     return {
-        id: int.identity.low,
+        id: int.properties.uuid,
         name: int.properties.name,
         type: int.properties.type,
         connected: int.properties.connected,
         owner: {
-            id: owner.identity.low,
+            id: owner.properties.uuid,
             name: owner.properties.name
         }
     }

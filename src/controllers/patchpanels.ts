@@ -107,9 +107,12 @@ const remove = async (request: Request, response: Response) => {
 //GET /patchpanels/:id/interfaces
 const getInterfaces = async (request: Request, response: Response) => {
     const id: string = request.params.id
+    const order = request.query.order
+    const direction = request.query.direction
     const cypher = `MATCH (m:${PATCHPANEL})<-[${INTERFACES_IN_PATCHPANEL}]-(n:${INTERFACE}) 
                     WHERE m.uuid = $id 
-                    RETURN m, n`
+                    RETURN m, n
+                    ORDER BY n.${order} ${direction}`
 
     if (!id) {
         response.status(400).json({
@@ -126,7 +129,7 @@ const createInterface = async (request: Request, response: Response) => {
     const id:string = request.params.id
     const name: string = request.body.name
     const cypher = `MATCH (m:${PATCHPANEL}) where m.uuid = $id
-                    CREATE (n:${INTERFACE} {name: $name, type: m.type})-[${INTERFACES_IN_PATCHPANEL}]->(m)
+                    CREATE (n:${INTERFACE} {name: $name, type: m.type, connected: false})-[${INTERFACES_IN_PATCHPANEL}]->(m)
                     RETURN n,m`
 
     if (!id) {
