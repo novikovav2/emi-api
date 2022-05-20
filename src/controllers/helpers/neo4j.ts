@@ -37,10 +37,10 @@ const formatDevice = (record: any): Device => {
     const device =  record.get('n')
     const rack =  record.get('m')
     return {
-        id: device.identity.low,
+        id: device.properties.uuid,
         name: device.properties.name,
         rack: {
-            id: rack.identity.low,
+            id: rack.properties.uuid,
             name: rack.properties.name,
         }
     }

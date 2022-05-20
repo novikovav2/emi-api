@@ -1,7 +1,7 @@
 import {Rack} from "./rack";
 
 export interface Device {
-    id: number,
-    name: number,
+    id: string,
+    name: string,
     rack: Partial<Rack>
 }
