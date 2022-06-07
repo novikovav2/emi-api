@@ -96,9 +96,12 @@ const remove = async (request: Request, response: Response) => {
 //GET /devices/:id/interfaces
 const getInterfaces = async (request: Request, response: Response) => {
     const id: string = request.params.id
+    const order = request.query.order
+    const direction = request.query.direction
     const cypher = `MATCH (m:${DEVICE})<-[${INTERFACES_IN_DEVICE}]-(n:${INTERFACE}) 
                     WHERE m.uuid=$id 
-                    RETURN m, n`
+                    RETURN m, n
+                    ORDER BY n.${order} ${direction}`
 
     if (!id) {
         response.status(400).json({
@@ -118,7 +121,7 @@ const createInterface = async (request: Request, response: Response) => {
     const cypher = `MATCH (m:${DEVICE}) where m.uuid = $id
                     CREATE (n:${INTERFACE} {name: $name, 
                                             type: $type,
-                                            physicalConnected: false,
+                                            connected: false,
                                             logicalConnected: false
                                             })-[${INTERFACES_IN_DEVICE}]->(m)
                     RETURN n,m`
@@ -134,7 +137,7 @@ const createInterface = async (request: Request, response: Response) => {
             error: 'Name param is required'
         })
     }
-
+    
     if (!type || (type !== 'OPTIC' && type !== 'COPPER')) {
         response.status(400).json({
             error: 'Type must be COPPER or OPTIC'
