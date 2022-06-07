@@ -1,0 +1,35 @@
+{
+    // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
+    // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
+    // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch via NPM",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "env": {
+                "NEO4J_URL": "neo4j://localhost:7687",
+                "SECRET_KEY": "03c1e1a635387eddc8bab02b822f18b2513a2154ebeacbbfee488ca9be5aa5e52973386e81ac49ad80626836c06a7b74",
+                "NEO4J_USER": "neo4j",
+                "NEO4J_PASS": "password",
+                "MYSQL_HOST": "localhost",
+                "MYSQL_PORT": "3306",
+                "MYSQL_USER": "root",
+                "MYSQL_PASS": "password",
+                "MYSQL_DB": "emi",
+                "PORT": "3000",
+                "NODE_ENV": "development"
+            },
+            "console": "integratedTerminal"
+        }
+    ]
+}

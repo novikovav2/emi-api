@@ -58,7 +58,7 @@ const add = async (request: Request, response: Response) => {
 const update = async (request: Request, response: Response) => {
     const id:string = request.params.id
     const name: string = request.body.name
-    const cypher = `MATCH (n:${DEVICE})-[${DEVICES_IN_RACK}]->(m:${RACK}) where ID n.uuid = $id 
+    const cypher = `MATCH (n:${DEVICE})-[${DEVICES_IN_RACK}]->(m:${RACK}) where n.uuid = $id 
                     SET n.name=$name 
                     RETURN n, m`
 
