@@ -4,7 +4,8 @@ export interface Interface {
     id: string,
     name: string,
     type: material,
-    connected: boolean
+    connected: boolean,
+    logicalConnected: boolean,
     owner: {
         id: string,
         name: string

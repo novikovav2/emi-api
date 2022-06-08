@@ -68,6 +68,7 @@ const formatInterface = (record: any): Interface => {
         name: int.properties.name,
         type: int.properties.type,
         connected: int.properties.connected,
+        logicalConnected: int.properties.logicalConnected,
         owner: {
             id: owner.properties.uuid,
             name: owner.properties.name
@@ -76,30 +77,65 @@ const formatInterface = (record: any): Interface => {
 }
 
 const formatPatchcord = (record: any): Patchcord => {
-    const start = record.get('n')
-    const end = record.get('m')
+    const intStart = record.get('n')
+    const intEnd = record.get('m')
     const link = record.get('r')
     const ownerStart = record.get('d1')
     const ownerEnd = record.get('d2')
+    const rackStart = record.get('r1')
+    const rackEnd = record.get('r2')
+    console.log(ownerStart)
     return {
-        id: link.identity.low,
+        id: link.properties.uuid,
         type: link.properties.type,
+        // start1: {
+        //     id: start.properties.uuid,
+        //     name: start.properties.name,
+        //     type: start.properties.type,
+        //     owner: {
+        //         id: ownerStart.properties.uuid,
+        //         name: ownerStart.properties.name
+        //     }
+        // },
         start: {
-            id: start.identity.low,
-            name: start.properties.name,
-            type: start.properties.type,
+            rack: {
+                id: rackStart.properties.uuid,
+                name: rackStart.properties.name
+            },
             owner: {
-                id: ownerStart.identity.low,
-                name: ownerStart.properties.name
+                id: ownerStart.properties.uuid,
+                name: ownerStart.properties.name,
+                type: ownerStart.labels[0]
+            },
+            interface: {
+                id: intStart.properties.uuid,
+                name: intStart.properties.name,
+                type: intStart.properties.type
             }
         },
+        // end: {
+        //     id: end.properties.uuid,
+        //     name: end.properties.name,
+        //     type: end.properties.type,
+        //     owner: {
+        //         id: ownerEnd.properties.uuid,
+        //         name: ownerEnd.properties.name
+        //     }
+        // }
         end: {
-            id: end.identity.low,
-            name: end.properties.name,
-            type: end.properties.type,
+            rack: {
+                id: rackEnd.properties.uuid,
+                name: rackEnd.properties.name
+            },
             owner: {
-                id: ownerEnd.identity.low,
-                name: ownerEnd.properties.name
+                id: ownerEnd.properties.uuid,
+                name: ownerEnd.properties.name,
+                type: ownerEnd.labels[0]
+            },
+            interface: {
+                id: intEnd.properties.uuid,
+                name: intEnd.properties.name,
+                type: intEnd.properties.type
             }
         }
     }

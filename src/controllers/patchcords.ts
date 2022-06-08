@@ -1,16 +1,16 @@
 import {Request, Response} from "express";
-import {DEVICE, INTERFACE, PATCHPANEL} from "../models/models";
+import {DEVICE, INTERFACE, PATCHPANEL, RACK} from "../models/models";
 import {PATCHCORDS} from "../models/relations";
 import {query} from "./helpers/neo4j";
 
 
 // GET /patchcords
 const getAll = async (request: Request, response: Response) => {
-    const cypher = `MATCH (d1)<--(n:${INTERFACE})-[r${PATCHCORDS}]
-                        ->(m:${INTERFACE})-->(d2)
+    const cypher = `MATCH (r1:${RACK})<--(d1)<--(n:${INTERFACE})-[r${PATCHCORDS}]
+                        ->(m:${INTERFACE})-->(d2)--(r2:${RACK})
                     WHERE (d1:${DEVICE} OR d1:${PATCHPANEL})
                         AND (d2:${DEVICE} OR d2:${PATCHPANEL})
-                    RETURN n, m, r, d1, d2`
+                    RETURN n, m, r, d1, d2, r1, r2`
 
     const {status, result} = await query(cypher, {}, 'patchcord')
     return response.status(status).json(result)
@@ -40,15 +40,15 @@ const getOne = async (request: Request, response: Response) => {
 //  startId - ID of start interface
 //  endId - ID of end interface
 const add = async (request: Request, response: Response) => {
-    const startId: number = +request.body.startId
-    const endId: number = +request.body.endId
+    const startId: string = request.body.startId
+    const endId: string = request.body.endId
     const cypher = `MATCH (d1)<--(n:${INTERFACE}), (m:${INTERFACE})-->(d2)
                     WHERE ID(n)=$startId AND ID(m)=$endId AND n.type=m.type
                             AND NOT (n)-[${PATCHCORDS}]-(:${INTERFACE})
                             AND NOT (m)-[${PATCHCORDS}]-(:${INTERFACE})
                             AND (d1:${DEVICE} OR d1:${PATCHPANEL})
                             AND (d2:${DEVICE} OR d2:${PATCHPANEL})
-                    CREATE (n)-[r${PATCHCORDS}]->(m)
+                    CREATE (n)-[r${PATCHCORDS} {uuid: apoc.create.uuid()}]->(m)
                     RETURN n, m, r, d1, d2`
 
     if (!startId || !endId) {

@@ -1,9 +1,45 @@
 import {material} from "./material";
-import {Interface} from "./interface";
+
+// export interface Patchcord {
+//     id: number,
+//     type: material,
+//     start: Partial<Interface>,
+//     end: Partial<Interface>
+// }
 
 export interface Patchcord {
-    id: number,
+    id: string,
     type: material,
-    start: Partial<Interface>,
-    end: Partial<Interface>
+    start: {
+        rack: {
+            id: string,
+            name: string
+        },
+        owner: {
+            id:string,
+            name: string,
+            type: string
+        },
+        interface: {
+            id: string,
+            name: string,
+            type: string
+        }
+    },
+    end: {
+        rack: {
+            id: string,
+            name: string
+        },
+        owner: {
+            id:string,
+            name: string,
+            type: string
+        },
+        interface: {
+            id: string,
+            name: string,
+            type: string
+        }
+    }
 }
