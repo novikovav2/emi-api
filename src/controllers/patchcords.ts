@@ -19,16 +19,19 @@ const getAll = async (request: Request, response: Response) => {
 
 // GET /patchcords/:id
 const getOne = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (d1)<--(n:${INTERFACE})-[r${PATCHCORDS}]
-                        ->(m:${INTERFACE})-->(d2) 
-                    WHERE ID(r)=$id AND (d1:${DEVICE} OR d1:${PATCHPANEL})
+    const id:string = request.params.id
+    
+    const cypher = `MATCH (n:${INTERFACE})-[r${PATCHCORDS}]->(m:${INTERFACE})
+                    MATCH (n)-->(d1)-->(r1:${RACK})
+                    MATCH (m)-->(d2)-->(r2:${RACK})
+                    WHERE r.uuid = $id
+                        AND (d1:${DEVICE} OR d1:${PATCHPANEL})
                         AND (d2:${DEVICE} OR d2:${PATCHPANEL})
-                    RETURN n, m, r, d1, d2`
+                    RETURN  n, m, r, d1, r1, d2, r2`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param is required'
         })
     }
 
