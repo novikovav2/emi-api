@@ -98,10 +98,7 @@ const getInterfaces = async (request: Request, response: Response) => {
     const id: string = request.params.id
     const order = request.query.order
     const direction = request.query.direction
-    const cypher = `MATCH (m:${DEVICE})<-[${INTERFACES_IN_DEVICE}]-(n:${INTERFACE}) 
-                    WHERE m.uuid=$id 
-                    RETURN m, n
-                    ORDER BY n.${order} ${direction}`
+    const connected = request.query.connected as string
 
     if (!id) {
         response.status(400).json({
@@ -109,7 +106,19 @@ const getInterfaces = async (request: Request, response: Response) => {
         })
     }
 
-    const {status, result} = await query(cypher, {id: id}, 'interface')
+    let params: any = {id: id}
+    let cypher = `MATCH (m:${DEVICE})<-[${INTERFACES_IN_DEVICE}]-(n:${INTERFACE}) 
+                    WHERE m.uuid=$id `
+                    
+    
+    if (connected) {
+        cypher = cypher + ` AND n.connected = $connected `
+        params['connected'] = JSON.parse(connected)
+    }
+
+    cypher = cypher + ` RETURN m, n ORDER BY n.${order} ${direction}`
+
+    const {status, result} = await query(cypher, params, 'interface')
     return response.status(status).json(result)
 }
 

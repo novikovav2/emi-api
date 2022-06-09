@@ -84,7 +84,6 @@ const formatPatchcord = (record: any): Patchcord => {
     const ownerEnd = record.get('d2')
     const rackStart = record.get('r1')
     const rackEnd = record.get('r2')
-    console.log(ownerStart)
     return {
         id: link.properties.uuid,
         type: link.properties.type,
