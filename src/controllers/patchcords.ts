@@ -46,14 +46,6 @@ const getOne = async (request: Request, response: Response) => {
 const add = async (request: Request, response: Response) => {
     const startId: string = request.body.startId
     const endId: string = request.body.endId
-    // const cypher = `MATCH (d1)<--(n:${INTERFACE}), (m:${INTERFACE})-->(d2)
-    //                 WHERE ID(n)=$startId AND ID(m)=$endId AND n.type=m.type
-    //                         AND NOT (n)-[${PATCHCORDS}]-(:${INTERFACE})
-    //                         AND NOT (m)-[${PATCHCORDS}]-(:${INTERFACE})
-    //                         AND (d1:${DEVICE} OR d1:${PATCHPANEL})
-    //                         AND (d2:${DEVICE} OR d2:${PATCHPANEL})
-    //                 CREATE (n)-[r${PATCHCORDS} {uuid: apoc.create.uuid()}]->(m)
-    //                 RETURN n, m, r, d1, d2`
     const cypher = `MATCH (r1:${RACK})<--(d1)<--(n:${INTERFACE}) 
                         WHERE n.uuid = $startId
                         AND NOT (n)-[${PATCHCORDS}]-(:${INTERFACE})
@@ -81,14 +73,14 @@ const add = async (request: Request, response: Response) => {
 
 // DELETE /patchcords/:id
 const remove = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
+    const id:string = request.params.id
     const cypher = `MATCH (n:${INTERFACE})-[r${PATCHCORDS}]->(m:${INTERFACE}) 
-                    WHERE ID(r)=$id
+                    WHERE r.uuid=$id
                     DELETE r`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param is required'
         })
     }
 
