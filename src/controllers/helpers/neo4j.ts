@@ -87,15 +87,6 @@ const formatPatchcord = (record: any): Patchcord => {
     return {
         id: link.properties.uuid,
         type: link.properties.type,
-        // start1: {
-        //     id: start.properties.uuid,
-        //     name: start.properties.name,
-        //     type: start.properties.type,
-        //     owner: {
-        //         id: ownerStart.properties.uuid,
-        //         name: ownerStart.properties.name
-        //     }
-        // },
         start: {
             rack: {
                 id: rackStart.properties.uuid,
@@ -112,15 +103,6 @@ const formatPatchcord = (record: any): Patchcord => {
                 type: intStart.properties.type
             }
         },
-        // end: {
-        //     id: end.properties.uuid,
-        //     name: end.properties.name,
-        //     type: end.properties.type,
-        //     owner: {
-        //         id: ownerEnd.properties.uuid,
-        //         name: ownerEnd.properties.name
-        //     }
-        // }
         end: {
             rack: {
                 id: rackEnd.properties.uuid,
@@ -170,30 +152,45 @@ const formatLogicalLink = (record: any): LogicalLink => {
 }
 
 const formatCables = (record: any): Cable => {
-    const start = record.get('n')
-    const end = record.get('m')
+    const intStart = record.get('n')
+    const intEnd = record.get('m')
     const link = record.get('r')
     const ownerStart = record.get('d1')
     const ownerEnd = record.get('d2')
+    const rackStart = record.get('r1')
+    const rackEnd = record.get('r2')
+
     return {
-        id: link.identity.low,
+        id: link.properties.uuid,
         type: link.properties.type,
         start: {
-            id: start.identity.low,
-            name: start.properties.name,
-            type: start.properties.type,
-            owner: {
-                id: ownerStart.identity.low,
+            rack: {
+                id: rackStart.properties.uuid,
+                name: rackStart.properties.name
+            },
+            patchpanel: {
+                id: ownerStart.properties.uuid,
                 name: ownerStart.properties.name
+            },
+            interface: {
+                id: intStart.properties.uuid,
+                name: intStart.properties.name,
+                type: intStart.properties.type
             }
         },
         end: {
-            id: end.identity.low,
-            name: end.properties.name,
-            type: end.properties.type,
-            owner: {
-                id: ownerEnd.identity.low,
+            rack: {
+                id: rackEnd.properties.uuid,
+                name: rackEnd.properties.name
+            },
+            patchpanel: {
+                id: ownerEnd.properties.uuid,
                 name: ownerEnd.properties.name
+            },
+            interface: {
+                id: intEnd.properties.uuid,
+                name: intEnd.properties.name,
+                type: intEnd.properties.type
             }
         }
     }

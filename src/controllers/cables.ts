@@ -1,14 +1,19 @@
 import {Request, Response} from "express";
-import {INTERFACE, PATCHPANEL} from "../models/models";
+import {INTERFACE, PATCHPANEL, RACK} from "../models/models";
 import {CABLES} from "../models/relations";
 import {query} from "./helpers/neo4j";
 
 
 // GET /cables
 const getAll = async (request: Request, response: Response) => {
-    const cypher = `MATCH (d1:${PATCHPANEL})<--(n:${INTERFACE})-[r${CABLES}]
-                        ->(m:${INTERFACE})-->(d2:${PATCHPANEL}) 
-                    RETURN n, m, r, d1, d2`
+    // const cypher = `MATCH (d1:${PATCHPANEL})<--(n:${INTERFACE})-[r${CABLES}]
+    //                     ->(m:${INTERFACE})-->(d2:${PATCHPANEL}) 
+    //                 RETURN n, m, r, d1, d2`
+    
+    const cypher = `MATCH (n:${INTERFACE})-[r${CABLES}]->(m:${INTERFACE})
+                    MATCH (n)-->(d1:${PATCHPANEL})-->(r1:${RACK})
+                    MATCH (m)-->(d2:${PATCHPANEL})-->(r2:${RACK})
+                    RETURN  n, m, r, d1, r1, d2, r2`
 
     const {status, result} = await query(cypher, {}, 'cables')
     return response.status(status).json(result)
