@@ -21,11 +21,12 @@ const getAll = async (request: Request, response: Response) => {
 
 // GET /cables/:id
 const getOne = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (d1:${PATCHPANEL})<--(n:${INTERFACE})-[r${CABLES}]
-                        ->(m:${INTERFACE})-->(d2:${PATCHPANEL}) 
-                    WHERE ID(r)=$id
-                    RETURN n, m, r, d1, d2`
+    const id:string = request.params.id
+    const cypher = `MATCH (n:${INTERFACE})-[r${CABLES}]->(m:${INTERFACE})
+                    MATCH (n)-->(d1:${PATCHPANEL})-->(r1:${RACK})
+                    MATCH (m)-->(d2:${PATCHPANEL})-->(r2:${RACK}) 
+                    WHERE r.uuid = $id
+                    RETURN n, m, r, d1, d2, r1, r2`
 
     if (!id) {
         response.status(400).json({
@@ -51,8 +52,9 @@ const add = async (request: Request, response: Response) => {
                     WHERE n.uuid = $startId AND m.uuid = $endId AND n.type=m.type
                             AND NOT (n)-[${CABLES}]-(:${INTERFACE})
                             AND NOT (m)-[${CABLES}]-(:${INTERFACE})
-                    CREATE (n)-[r${CABLES} {type: n.type}]->(m)
-                    RETURN n, m, r, d1, d2`
+                    CREATE (n)-[r${CABLES} {uuid: apoc.create.uuid(),
+                                            type: n.type}]->(m)
+                    RETURN n, m, r, d1, d2, r1, r2`
 
 
     if (!startId || !endId) {
