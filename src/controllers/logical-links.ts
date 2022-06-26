@@ -33,23 +33,24 @@ const getOne = async (request: Request, response: Response) => {
     return response.status(status).json(result)
 }
 
-// POST /logicalLinks
+// POST /logical-links
 // Params:
 //  startId - ID of start interface
 //  endId - ID of end interface
 const add = async (request: Request, response: Response) => {
-    const startId: number = +request.body.startId
-    const endId: number = +request.body.endId
+    const startId: string = request.body.startId
+    const endId: string = request.body.endId
     const cypher = `MATCH (d1:${DEVICE})<--(n:${INTERFACE}), (m:${INTERFACE})-->(d2:${DEVICE})
-                    WHERE ID(n)=$startId AND ID(m)=$endId AND n.type=m.type
+                    MATCH (d1)-->(r1:${RACK}), (d2)-->(r2:${RACK}) 
+                    WHERE n.uuid = $startId AND m.uuid = $endId AND n.type=m.type
                             AND NOT (n)-[${LOGICAL_LINK}]-(:${INTERFACE})
                             AND NOT (m)-[${LOGICAL_LINK}]-(:${INTERFACE})
-                    CREATE (n)-[r${LOGICAL_LINK}]->(m)
-                    RETURN n, m, r, d1, d2`
+                    CREATE (n)-[r${LOGICAL_LINK} {uuid: apoc.create.uuid()}]->(m)
+                    RETURN n, m, r, d1, d2, r1, r2`
 
     if (!startId || !endId) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param is required'
         })
     }
 
@@ -57,7 +58,7 @@ const add = async (request: Request, response: Response) => {
     return response.status(status).json(result)
 }
 
-// DELETE /logicalLinks/:id
+// DELETE /logica-links/:id
 const remove = async (request: Request, response: Response) => {
     const id:number = +request.params.id
     const cypher = `MATCH (n:${INTERFACE})-[r${LOGICAL_LINK}]->(m:${INTERFACE}) 
