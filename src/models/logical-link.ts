@@ -1,7 +1,33 @@
-import {Interface} from "./interface";
-
 export interface LogicalLink {
-    id: number,
-    start: Partial<Interface>,
-    end: Partial<Interface>
+    id: string,
+    start: {
+        rack: {
+            id: string,
+            name: string
+        },
+        device: {
+            id:string,
+            name: string            
+        },
+        interface: {
+            id: string,
+            name: string,
+            type: string
+        }
+    },
+    end: {
+        rack: {
+            id: string,
+            name: string
+        },
+        device: {
+            id:string,
+            name: string
+        },
+        interface: {
+            id: string,
+            name: string,
+            type: string
+        }
+    }
 }

@@ -1,14 +1,15 @@
 import {Request, Response} from "express";
-import {DEVICE, INTERFACE} from "../models/models";
+import {DEVICE, INTERFACE, RACK} from "../models/models";
 import {LOGICAL_LINK} from "../models/relations";
 import {query} from "./helpers/neo4j";
 
 
-// GET /logicalLinks
+// GET /logical-links
 const getAll = async (request: Request, response: Response) => {
-    const cypher = `MATCH (d1:${DEVICE})<--(n:${INTERFACE})-[r${LOGICAL_LINK}]
-                        ->(m:${INTERFACE})-->(d2:${DEVICE}) 
-                    RETURN n, m, r, d1, d2`
+    const cypher = `MATCH (n:${INTERFACE})-[r${LOGICAL_LINK}]->(m:${INTERFACE})
+                    MATCH (n)-->(d1:${DEVICE})-->(r1:${RACK})
+                    MATCH (m)-->(d2:${DEVICE})-->(r2:${RACK})
+                    RETURN n, m, r, d1, d2, r1, r2`
 
     const {status, result} = await query(cypher, {}, 'logicalLink')
     return response.status(status).json(result)

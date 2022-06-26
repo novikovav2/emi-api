@@ -123,29 +123,43 @@ const formatPatchcord = (record: any): Patchcord => {
 }
 
 const formatLogicalLink = (record: any): LogicalLink => {
-    const start = record.get('n')
-    const end = record.get('m')
+    const intStart = record.get('n')
+    const intEnd = record.get('m')
     const link = record.get('r')
-    const ownerStart = record.get('d1')
-    const ownerEnd = record.get('d2')
+    const deviceStart = record.get('d1')
+    const deviceEnd = record.get('d2')
+    const rackStart = record.get('r1')
+    const rackEnd = record.get('r2')
     return {
-        id: link.identity.low,
+        id: link.properties.uuid,
         start: {
-            id: start.identity.low,
-            name: start.properties.name,
-            type: start.properties.type,
-            owner: {
-                id: ownerStart.identity.low,
-                name: ownerStart.properties.name
+            rack: {
+                id: rackStart.properties.uuid,
+                name: rackStart.properties.name
+            },
+            device: {
+                id: deviceStart.properties.uuid,
+                name: deviceStart.properties.name
+            },
+            interface: {
+                id: intStart.properties.uuid,
+                name: intStart.properties.name,
+                type: intStart.properties.type,
             }
         },
         end: {
-            id: end.identity.low,
-            name: end.properties.name,
-            type: end.properties.type,
-            owner: {
-                id: ownerEnd.identity.low,
-                name: ownerEnd.properties.name
+            rack: {
+                id: rackEnd.properties.uuid,
+                name: rackEnd.properties.name
+            },
+            device: {
+                id: deviceEnd.properties.uuid,
+                name: deviceEnd.properties.name
+            },
+            interface: {
+                id: intEnd.properties.uuid,
+                name: intEnd.properties.name,
+                type: intEnd.properties.type,
             }
         }
     }
