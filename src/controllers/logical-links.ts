@@ -17,15 +17,16 @@ const getAll = async (request: Request, response: Response) => {
 
 // GET /logicalLinks/:id
 const getOne = async (request: Request, response: Response) => {
-    const id:number = +request.params.id
-    const cypher = `MATCH (d1:${DEVICE})<--(n:${INTERFACE})-[r${LOGICAL_LINK}]
-                        ->(m:${INTERFACE})-->(d2:${DEVICE}) 
-                    WHERE ID(r)=$id
-                    RETURN n, m, r, d1, d2`
+    const id:string = request.params.id
+    const cypher = `MATCH (n:${INTERFACE})-[r${LOGICAL_LINK}]->(m:${INTERFACE})
+                    MATCH (n)-->(d1:${DEVICE})-->(r1:${RACK})
+                    MATCH (m)-->(d2:${DEVICE})-->(r2:${RACK}) 
+                    WHERE r.uuid = $id
+                    RETURN n, m, r, d1, d2, r1, r2`
 
     if (!id) {
         response.status(400).json({
-            error: 'ID must be number'
+            error: 'ID param is required'
         })
     }
 
