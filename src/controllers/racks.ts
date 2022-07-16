@@ -5,9 +5,31 @@ import {query} from "./helpers/neo4j";
 
 // GET /racks
 const getAll = async (request: Request, response: Response) => {
-    const cypher = `MATCH (m:${RACK})-[${RACKS_IN_ROOM}]->(n:${ROOM}) RETURN n, m`
+    const order = request.query.order
+    const direction = request.query.direction
+    const filter = request.query.filter
+    let cypher = `MATCH (m:${RACK})-[${RACKS_IN_ROOM}]->(n:${ROOM}) `
+    
+    if (filter) {
+        cypher = cypher + `WHERE n.title CONTAINS $filter OR m.name CONTAINS $filter`
+    }
 
-    const {status, result} = await query(cypher, {}, 'rack')
+    cypher = cypher + ' RETURN n,m '
+
+    if (order && direction) {
+        switch (order) {
+            case "name":
+                cypher = cypher + ` ORDER BY m.name ${direction}`
+                break
+            case "room":
+                cypher = cypher + ` ORDER BY n.title ${direction}`
+                break
+            default:
+                break
+        }     
+    }
+
+    const {status, result} = await query(cypher, {filter}, 'rack')
     return response.status(status).json(result)
 }
 
