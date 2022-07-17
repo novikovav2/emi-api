@@ -9,9 +9,34 @@ import {query} from "./helpers/neo4j";
 
 // GET /patchpanels
 const getAll = async (request: Request, response: Response) => {
-    const cypher = `MATCH (n:${PATCHPANEL})-[${PATCHPANELS_IN_RACK}]->(m:${RACK}) RETURN n, m`
+    const order = request.query.order
+    const direction = request.query.direction
+    const filter = request.query.filter
+    let cypher = `MATCH (n:${PATCHPANEL})-[${PATCHPANELS_IN_RACK}]->(m:${RACK}) `
 
-    const {status, result} = await query(cypher, {}, 'patchpanel')
+    if (filter) {
+        cypher = cypher + ` WHERE n.name CONTAINS $filter 
+                                OR m.name CONTAINS $filter`
+    }
+
+    cypher = cypher + ' RETURN n,m '
+
+    if (order && direction) {
+        switch (order) {
+            case "name":
+                cypher = cypher + ` ORDER BY n.name ${direction}`
+                break
+            case "rack":
+                cypher = cypher + ` ORDER BY m.name ${direction}`
+                break
+            case "material":
+                cypher = cypher + ` ORDER BY n.type ${direction}`
+            default:
+                break
+        }     
+    }
+
+    const {status, result} = await query(cypher, {filter}, 'patchpanel')
     return response.status(status).json(result)
 }
 
