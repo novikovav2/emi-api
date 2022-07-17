@@ -134,15 +134,27 @@ const getInterfaces = async (request: Request, response: Response) => {
     const id: string = request.params.id
     const order = request.query.order
     const direction = request.query.direction
-    const cypher = `MATCH (m:${PATCHPANEL})<-[${INTERFACES_IN_PATCHPANEL}]-(n:${INTERFACE}) 
+    let cypher = `MATCH (m:${PATCHPANEL})<-[${INTERFACES_IN_PATCHPANEL}]-(n:${INTERFACE}) 
                     WHERE m.uuid = $id 
-                    RETURN m, n
-                    ORDER BY n.${order} ${direction}`
+                    RETURN m, n`
 
     if (!id) {
         response.status(400).json({
             error: 'ID param is required'
         })
+    }
+
+    if (order && direction) {
+        switch (order) {
+            case "name":
+                cypher = cypher + ` ORDER BY n.name ${direction}`
+                break
+            case "connected":
+                cypher = cypher + ` ORDER BY n.connected ${direction}`
+                break
+            default:
+                break
+        }     
     }
 
     const {status, result} = await query(cypher, {id: id}, 'interface')
